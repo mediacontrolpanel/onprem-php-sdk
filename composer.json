@@ -1,0 +1,59 @@
+{
+    "name": "mediacontrolpanel/onprem-php-sdk",
+    "description": "PHP SDK for the MediaCP On-Prem audio and video control panel API.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "mediacp",
+        "mediacontrolpanel",
+        "on-prem",
+        "audio",
+        "video",
+        "laravel",
+        "sdk"
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "illuminate/config": "^10.0|^11.0|^12.0",
+        "illuminate/container": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MediaCP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MediaCP\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MediaCP\\Laravel\\MediaCPServiceProvider"
+            ],
+            "aliases": {
+                "MediaCP": "MediaCP\\Laravel\\Facades\\MediaCP"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:coverage": "phpunit --coverage-text"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
