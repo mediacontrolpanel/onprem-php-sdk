@@ -8,10 +8,30 @@ use MediaCP\Http\Client;
 
 abstract class Resource
 {
-    public function __construct(
-        protected readonly Client $client,
-        protected readonly string $endpoint
-    ) {
+    public function __construct(protected readonly Client $client)
+    {
+    }
+
+    /**
+     * @param string|int $serverId
+     * @param string|int ...$segments
+     */
+    protected function apiPath(string|int $serverId, string|int ...$segments): string
+    {
+        $encoded = array_map(
+            static fn (string|int $segment): string => rawurlencode((string) $segment),
+            array_merge([$serverId], $segments)
+        );
+
+        return 'api/' . implode('/', $encoded);
+    }
+
+    /**
+     * @param string|int ...$segments
+     */
+    protected function adminPath(string|int ...$segments): string
+    {
+        return $this->apiPath(0, ...$segments);
     }
 
     /**
@@ -19,20 +39,9 @@ abstract class Resource
      *
      * @return array<string, mixed>
      */
-    public function list(array $query = []): array
+    protected function get(string $uri, array $query = []): array
     {
-        return $this->client->get($this->endpoint, $query);
-    }
-
-    /**
-     * @param string|int $id
-     * @param array<string, mixed> $query
-     *
-     * @return array<string, mixed>
-     */
-    public function get(string|int $id, array $query = []): array
-    {
-        return $this->client->get($this->endpoint . '/' . rawurlencode((string) $id), $query);
+        return $this->client->get($uri, $query);
     }
 
     /**
@@ -41,43 +50,29 @@ abstract class Resource
      *
      * @return array<string, mixed>
      */
-    public function create(array $payload, array $query = []): array
+    protected function postForm(string $uri, array $payload = [], array $query = []): array
     {
-        return $this->client->post($this->endpoint, $payload, $query);
+        return $this->client->postForm($uri, $payload, $query);
     }
 
     /**
-     * @param string|int $id
      * @param array<string, mixed> $payload
      * @param array<string, mixed> $query
      *
      * @return array<string, mixed>
      */
-    public function update(string|int $id, array $payload, array $query = []): array
+    protected function patchForm(string $uri, array $payload = [], array $query = []): array
     {
-        return $this->client->put($this->endpoint . '/' . rawurlencode((string) $id), $payload, $query);
+        return $this->client->patchForm($uri, $payload, $query);
     }
 
     /**
-     * @param string|int $id
-     * @param array<string, mixed> $payload
      * @param array<string, mixed> $query
      *
      * @return array<string, mixed>
      */
-    public function patch(string|int $id, array $payload, array $query = []): array
+    protected function deleteRequest(string $uri, array $query = []): array
     {
-        return $this->client->patch($this->endpoint . '/' . rawurlencode((string) $id), $payload, $query);
-    }
-
-    /**
-     * @param string|int $id
-     * @param array<string, mixed> $query
-     *
-     * @return array<string, mixed>
-     */
-    public function delete(string|int $id, array $query = []): array
-    {
-        return $this->client->delete($this->endpoint . '/' . rawurlencode((string) $id), $query);
+        return $this->client->delete($uri, $query);
     }
 }

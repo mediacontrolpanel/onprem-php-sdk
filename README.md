@@ -24,15 +24,15 @@ composer require mediacontrolpanel/onprem-php-sdk
 require __DIR__ . '/vendor/autoload.php';
 
 $mediacp = new MediaCP\Panel([
-    'base_url' => 'https://panel.example.com/api/',
+    'base_url' => 'https://panel.example.com',
     'auth_type' => 'bearer',
     'token' => 'your-api-token',
 ]);
 
-$services = $mediacp->services()->list();
-$service = $mediacp->services()->get(123);
+$services = $mediacp->services()->list(['user_id' => 1, 'page' => 1]);
+$service = $mediacp->services()->show(237);
 
-$mediacp->services()->restart(123);
+$mediacp->services()->restart(237);
 ```
 
 ## Laravel
@@ -48,7 +48,7 @@ php artisan vendor:publish --tag=mediacp-config
 Add environment values:
 
 ```dotenv
-MEDIACP_BASE_URL=https://panel.example.com/api/
+MEDIACP_BASE_URL=https://panel.example.com
 MEDIACP_AUTH_TYPE=bearer
 MEDIACP_TOKEN=your-api-token
 ```
@@ -62,7 +62,7 @@ class ServiceController
 {
     public function index(Panel $mediacp): array
     {
-        return $mediacp->services()->list();
+        return $mediacp->services()->list(['page' => 1]);
     }
 }
 ```
@@ -72,7 +72,7 @@ Or use the facade:
 ```php
 use MediaCP\Laravel\Facades\MediaCP;
 
-$status = MediaCP::system()->status();
+$status = MediaCP::statistics()->summary();
 ```
 
 ## Authentication
@@ -81,7 +81,7 @@ Bearer token:
 
 ```php
 $mediacp = new MediaCP\Panel([
-    'base_url' => 'https://panel.example.com/api/',
+    'base_url' => 'https://panel.example.com',
     'auth_type' => 'bearer',
     'token' => 'your-api-token',
 ]);
@@ -91,7 +91,7 @@ API key header:
 
 ```php
 $mediacp = new MediaCP\Panel([
-    'base_url' => 'https://panel.example.com/api/',
+    'base_url' => 'https://panel.example.com',
     'auth_type' => 'api_key',
     'api_key' => 'your-api-key',
     'api_key_header' => 'X-API-KEY',
@@ -101,12 +101,20 @@ $mediacp = new MediaCP\Panel([
 ## Wrapped Categories
 
 - [Panel client](docs/panel.md)
-- [Accounts](docs/accounts.md)
-- [Servers](docs/servers.md)
+- [AutoDJ](docs/autodj.md)
+- [DJs](docs/djs.md)
+- [Event / Schedule](docs/events.md)
+- [Jingle](docs/jingles.md)
+- [Media](docs/media.md)
+- [Playlist](docs/playlists.md)
+- [Playlist Tracks](docs/playlist-tracks.md)
 - [Services](docs/services.md)
+- [Source Control](docs/source-control.md)
 - [Statistics](docs/statistics.md)
-- [System](docs/system.md)
+- [Stream Events](docs/stream-events.md)
+- [Stream Targets](docs/stream-targets.md)
 - [Users](docs/users.md)
+- [Video Media](docs/video-media.md)
 - [Laravel integration](docs/laravel.md)
 
 The docs are split to mirror the SDK categories. When an official Postman collection is added to this repository, new categories can be mapped directly into matching Markdown files.
@@ -116,9 +124,9 @@ The docs are split to mirror the SDK categories. When an official Postman collec
 Use raw request helpers for any MediaCP endpoint that is not yet represented by a typed resource method:
 
 ```php
-$response = $mediacp->get('custom/endpoint', ['page' => 1]);
+$response = $mediacp->get('api/237/custom/endpoint', ['page' => 1]);
 
-$created = $mediacp->post('custom/endpoint', [
+$created = $mediacp->postForm('api/237/custom/endpoint', [
     'name' => 'Example',
 ]);
 ```

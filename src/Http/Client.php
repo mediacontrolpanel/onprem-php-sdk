@@ -62,6 +62,17 @@ class Client
      *
      * @return array<string, mixed>
      */
+    public function postForm(string $uri, array $payload = [], array $query = []): array
+    {
+        return $this->request('POST', $uri, ['form_params' => $payload, 'query' => $query]);
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     * @param array<string, mixed> $query
+     *
+     * @return array<string, mixed>
+     */
     public function put(string $uri, array $payload = [], array $query = []): array
     {
         return $this->request('PUT', $uri, ['json' => $payload, 'query' => $query]);
@@ -76,6 +87,17 @@ class Client
     public function patch(string $uri, array $payload = [], array $query = []): array
     {
         return $this->request('PATCH', $uri, ['json' => $payload, 'query' => $query]);
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     * @param array<string, mixed> $query
+     *
+     * @return array<string, mixed>
+     */
+    public function patchForm(string $uri, array $payload = [], array $query = []): array
+    {
+        return $this->request('PATCH', $uri, ['form_params' => $payload, 'query' => $query]);
     }
 
     /**

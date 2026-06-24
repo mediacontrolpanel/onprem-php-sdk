@@ -1,71 +1,110 @@
-# Services
+# Service
 
-Access audio and video service endpoints through:
+Access service endpoints through:
 
 ```php
 $services = $mediacp->services();
 ```
 
-## Methods
-
 ### `list(array $query = []): array`
 
 ```php
-$services = $mediacp->services()->list(['account_id' => 123]);
+$services = $mediacp->services()->list(['user_id' => 1, 'page' => 1]);
 ```
 
-### `get(string|int $id, array $query = []): array`
+### `show(string|int $serverId): array`
 
 ```php
-$service = $mediacp->services()->get(456);
+$service = $mediacp->services()->show(237);
 ```
 
-### `create(array $payload, array $query = []): array`
+### `create(string|int $serverId, array $payload): array`
 
 ```php
-$service = $mediacp->services()->create([
-    'account_id' => 123,
-    'name' => 'Main Stream',
-    'type' => 'audio',
+$service = $mediacp->services()->create(237, [
+    'userid' => 1,
+    'plugin' => 'icecast_kh',
+    'sourceplugin' => 'liquidsoap',
+    'unique_id' => 'My New Service',
+    'adminpassword' => 'test123',
+    'maxuser' => 500,
 ]);
 ```
 
-### `update(string|int $id, array $payload, array $query = []): array`
+### `update(string|int $serverId, array $payload): array`
 
 ```php
-$service = $mediacp->services()->update(456, [
-    'name' => 'Updated Stream',
-]);
+$service = $mediacp->services()->update(237, ['maxuser' => 500]);
 ```
 
-### `patch(string|int $id, array $payload, array $query = []): array`
+### `delete(string|int $serverId): array`
 
 ```php
-$service = $mediacp->services()->patch(456, [
-    'enabled' => true,
-]);
+$mediacp->services()->delete(237);
 ```
 
-### `delete(string|int $id, array $query = []): array`
+### `start(string|int $serverId): array`
 
 ```php
-$mediacp->services()->delete(456);
+$mediacp->services()->start(237);
 ```
 
-### `start(string|int $id, array $payload = []): array`
+### `stop(string|int $serverId): array`
 
 ```php
-$mediacp->services()->start(456);
+$mediacp->services()->stop(237);
 ```
 
-### `stop(string|int $id, array $payload = []): array`
+### `restart(string|int $serverId): array`
 
 ```php
-$mediacp->services()->stop(456);
+$mediacp->services()->restart(237);
 ```
 
-### `restart(string|int $id, array $payload = []): array`
+### `suspend(string|int $serverId, array $payload = []): array`
 
 ```php
-$mediacp->services()->restart(456);
+$mediacp->services()->suspend(237, ['reason' => 'Billing hold', 'days' => 7]);
+```
+
+### `unsuspend(string|int $serverId): array`
+
+```php
+$mediacp->services()->unsuspend(237);
+```
+
+### `updateSongTitle(string|int $serverId, string $title): array`
+
+```php
+$mediacp->services()->updateSongTitle(237, 'New Song title');
+```
+
+### `serviceInfo(string|int $serverId, array $query = []): array`
+
+```php
+$mediacp->services()->serviceInfo(237, ['extra' => true]);
+```
+
+### `connections(string|int $serverId, array $query = []): array`
+
+```php
+$mediacp->services()->connections(237, ['page' => 1]);
+```
+
+### `trackHistory(string|int $serverId, array $query = []): array`
+
+```php
+$mediacp->services()->trackHistory(237, ['limit' => 25]);
+```
+
+### `bandwidthHistory(string|int $serverId): array`
+
+```php
+$mediacp->services()->bandwidthHistory(237);
+```
+
+### `connectionHistory(string|int $serverId): array`
+
+```php
+$mediacp->services()->connectionHistory(237);
 ```

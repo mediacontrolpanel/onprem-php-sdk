@@ -6,7 +6,7 @@
 
 ```php
 $mediacp = new MediaCP\Panel([
-    'base_url' => 'https://panel.example.com/api/',
+    'base_url' => 'https://panel.example.com',
     'auth_type' => 'bearer',
     'token' => 'your-api-token',
 ]);
@@ -16,7 +16,7 @@ $mediacp = new MediaCP\Panel([
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `base_url` | string | Required API base URL. |
+| `base_url` | string | Required panel base URL, without `/api`. |
 | `auth_type` | string | `bearer`, `api_key`, or `none`. Defaults to `bearer`. |
 | `token` | string|null | Bearer token used when `auth_type` is `bearer`. |
 | `api_key` | string|null | API key used when `auth_type` is `api_key`. |
@@ -30,44 +30,50 @@ $mediacp = new MediaCP\Panel([
 ### `get(string $uri, array $query = []): array`
 
 ```php
-$response = $mediacp->get('services', ['page' => 1]);
+$response = $mediacp->get('api/0/media-service/list', ['page' => 1]);
 ```
 
 ### `post(string $uri, array $payload = [], array $query = []): array`
 
 ```php
-$response = $mediacp->post('services/123/restart');
+$response = $mediacp->postForm('api/237/media-service/update', [
+    'maxuser' => 500,
+]);
 ```
 
 ### `put(string $uri, array $payload = [], array $query = []): array`
 
 ```php
-$response = $mediacp->put('accounts/123', [
-    'name' => 'Updated Account',
-]);
+$response = $mediacp->post('api/237/custom-json-endpoint', ['enabled' => true]);
 ```
 
 ### `patch(string $uri, array $payload = [], array $query = []): array`
 
 ```php
-$response = $mediacp->patch('accounts/123', [
-    'status' => 'active',
-]);
+$response = $mediacp->patchForm('api/20/stream-targets/connect/1');
 ```
 
 ### `delete(string $uri, array $query = []): array`
 
 ```php
-$response = $mediacp->delete('users/123');
+$response = $mediacp->delete('api/0/user/delete/17');
 ```
 
 ## Resource Accessors
 
 ```php
-$mediacp->accounts();
-$mediacp->servers();
+$mediacp->autoDj();
+$mediacp->djs();
+$mediacp->events();
+$mediacp->jingles();
+$mediacp->media();
+$mediacp->playlists();
+$mediacp->playlistTracks();
 $mediacp->services();
+$mediacp->sourceControl();
 $mediacp->statistics();
-$mediacp->system();
+$mediacp->streamEvents();
+$mediacp->streamTargets();
 $mediacp->users();
+$mediacp->videoMedia();
 ```

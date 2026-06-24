@@ -11,7 +11,7 @@ php artisan vendor:publish --tag=mediacp-config
 ## Environment
 
 ```dotenv
-MEDIACP_BASE_URL=https://panel.example.com/api/
+MEDIACP_BASE_URL=https://panel.example.com
 MEDIACP_AUTH_TYPE=bearer
 MEDIACP_TOKEN=your-api-token
 MEDIACP_TIMEOUT=30

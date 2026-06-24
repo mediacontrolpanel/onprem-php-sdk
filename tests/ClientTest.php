@@ -19,24 +19,40 @@ class ClientTest extends TestCase
     {
         $http = new FakeHttpClient(new Response(200, [], '{"ok":true}'));
         $client = new Client([
-            'base_url' => 'https://panel.example.com/api',
+            'base_url' => 'https://panel.example.com',
             'token' => 'secret-token',
         ], $http);
 
-        $response = $client->post('/services/123/restart', ['force' => true]);
+        $response = $client->post('/api/237/custom-json-endpoint', ['force' => true]);
 
         self::assertSame(['ok' => true], $response);
         self::assertSame('POST', $http->requests[0]['method']);
-        self::assertSame('services/123/restart', $http->requests[0]['uri']);
+        self::assertSame('api/237/custom-json-endpoint', $http->requests[0]['uri']);
         self::assertSame(['force' => true], $http->requests[0]['options']['json']);
         self::assertSame('Bearer secret-token', $http->requests[0]['options']['headers']['Authorization']);
+    }
+
+    public function testItSendsFormRequests(): void
+    {
+        $http = new FakeHttpClient(new Response(200, [], '{"ok":true}'));
+        $client = new Client([
+            'base_url' => 'https://panel.example.com',
+            'token' => 'secret-token',
+        ], $http);
+
+        $response = $client->postForm('/api/237/media-service/update', ['maxuser' => 500]);
+
+        self::assertSame(['ok' => true], $response);
+        self::assertSame('POST', $http->requests[0]['method']);
+        self::assertSame('api/237/media-service/update', $http->requests[0]['uri']);
+        self::assertSame(['maxuser' => 500], $http->requests[0]['options']['form_params']);
     }
 
     public function testItSupportsApiKeyAuthentication(): void
     {
         $http = new FakeHttpClient(new Response(200, [], '{}'));
         $client = new Client([
-            'base_url' => 'https://panel.example.com/api',
+            'base_url' => 'https://panel.example.com',
             'auth_type' => 'api_key',
             'api_key' => 'api-key',
             'api_key_header' => 'X-MEDIACP-KEY',
@@ -60,7 +76,7 @@ class ClientTest extends TestCase
     {
         $http = new FakeHttpClient(new Response(200, [], 'not-json'));
         $client = new Client([
-            'base_url' => 'https://panel.example.com/api',
+            'base_url' => 'https://panel.example.com',
         ], $http);
 
         $this->expectException(ApiException::class);
@@ -75,7 +91,7 @@ class ClientTest extends TestCase
         $response = new Response(422, [], '{"message":"Validation failed","errors":{"name":["Required"]}}');
         $http = new FakeHttpClient(new RequestException('Request failed', $request, $response));
         $client = new Client([
-            'base_url' => 'https://panel.example.com/api',
+            'base_url' => 'https://panel.example.com',
         ], $http);
 
         try {
